@@ -9,8 +9,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="进程通讯"
         android:onClick="onClick"
-        />
+        android:text="向A进程发送消息" />
 
 </android.support.constraint.ConstraintLayout>

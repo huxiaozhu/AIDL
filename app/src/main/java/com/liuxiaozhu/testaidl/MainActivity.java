@@ -17,6 +17,9 @@ import android.widget.Toast;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private MyApp myApp;
+    private int a = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,23 +33,32 @@ public class MainActivity extends AppCompatActivity {
         //进程B 目的   binderServise  ----->  IBinder iBinder
 
         // c.conn.connected(r.name, service);
-        bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                //Proxy 对象  MyApp接口
-                MyApp myApp = MyApp.Stub.asInterface(service);
-                try {
-                    myApp.setName("刘小猪宝宝");
-                    Toast.makeText(MainActivity.this, "获取数据-----》" + myApp.getText(), Toast.LENGTH_SHORT).show();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+        if (myApp == null) {
+            bindService(intent, new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    //Proxy 对象  MyApp接口
+                    myApp = MyApp.Stub.asInterface(service);
+                    setName();
                 }
-            }
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
 
-            }
-        }, Context.BIND_AUTO_CREATE);
+                }
+            }, Context.BIND_AUTO_CREATE);
+        } else {
+            setName();
+        }
+    }
+
+    private void setName() {
+        try {
+            myApp.setName("刘小猪宝宝" + a);
+            Toast.makeText(MainActivity.this, "获取数据-----》" + myApp.getText(), Toast.LENGTH_SHORT).show();
+            a++;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }
